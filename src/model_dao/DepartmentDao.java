@@ -10,3 +10,8 @@ public interface DepartmentDao {
     public Department findById(Integer id); //encontrar objeto no banco de dados
     public List<Department> findAll(); //encontrar todos os objetos no banco de dados
 }
+
+/*
+ * O padrão DAO é um padrão de projeto que abstrai e encapsula os mecanismos de acesso a dados escondendo os 
+ * detalhes da execução da origem dos dados.
+*/
