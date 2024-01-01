@@ -1,5 +1,4 @@
-package entities;
-
+package model_entities;
 import java.io.Serializable;
 import java.util.Objects;
 

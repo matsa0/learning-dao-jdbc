@@ -1,10 +1,7 @@
 package application;
 
 import java.util.Date;
-
-import entities.Department;
-import entities.Seller;
-
+import model_entities.*;
 public class App {
     public static void main(String[] args) throws Exception {
         Department dp1 = new Department(1, "Sales");
