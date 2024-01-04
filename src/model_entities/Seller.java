@@ -33,6 +33,13 @@ public class Seller implements Serializable{
         this.id = id;
     }
 
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -64,12 +71,23 @@ public class Seller implements Serializable{
     //toString
     @Override
     public String toString() {
+        String departmentInfos = "";
+
+        if(this.department != null) { 
+            departmentInfos = this.department.toString();
+        }
+        else {
+            departmentInfos = "Nenhum departamento associado ao vendedor";
+        }
+    
+
         return "***Seller***" +
         "\nId > " + this.id +
         "\nName > " + this.name +
         "\nEmail > " + this.email +
         "\nBirthDate > " + this.birthDate +
-        "\nBaseSalary > " + this.baseSalary;
+        "\nBaseSalary > " + this.baseSalary +
+        "\n" + departmentInfos; 
     }
 
     //Equals and HashCode
