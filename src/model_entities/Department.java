@@ -1,5 +1,7 @@
 package model_entities;
 import java.io.Serializable;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Objects;
 
 public class Department implements Serializable{
@@ -14,6 +16,7 @@ public class Department implements Serializable{
         this.id = id;
         this.name = name;
     }
+
 
     //Getters and Setters
     public int getId() {

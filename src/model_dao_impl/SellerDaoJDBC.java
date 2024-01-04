@@ -52,24 +52,14 @@ public class SellerDaoJDBC implements SellerDao{
             rs = st.executeQuery(); //executa comando sql e armazena o resultado no ResultSet em formato de tabela  
 
             if(rs.next()) { //testa se existe algum resultado, se exite você navega por eles
-                Department dp = new Department();
-                dp.setId(rs.getInt("DepartmentId")); //Acessando a coluna DepartmentId
-                dp.setName(rs.getString("DepName")); //Acessando a coluna DepName
+                Department dp = instantiateDepartment(rs); //instanciando o objeto dp
 
-                Seller sl = new Seller();
-                sl.setId(rs.getInt("Id"));
-                sl.setName(rs.getString("Name"));
-                sl.setEmail(rs.getString("Email"));
-                sl.setBirthDate(rs.getDate("BirthDate"));
-                sl.setBaseSalary(rs.getDouble("BaseSalary"));
-                sl.setDepartment(dp); //Acessando o objeto dp
+                Seller sl1 = instantiateSeller(rs, dp); //instanciando o objeto sl1
 
-                return sl;
             }
-
             return null;
-
-        } catch(SQLException e) {
+        } 
+        catch(SQLException e) {
             throw new DbException(e.getMessage());
         }
         finally {
@@ -81,6 +71,26 @@ public class SellerDaoJDBC implements SellerDao{
     @Override
     public List<Seller> findAll() {
         throw new UnsupportedOperationException("Unimplemented method 'findAll'");
+    }
+
+    private Department instantiateDepartment(ResultSet rs) throws SQLException{ //vai capturar a exceção e lançar para a camada de cima
+        Department dp = new Department();
+        dp.setId(rs.getInt("DepartmentId"));
+        dp.setName(rs.getString("DepName"));
+
+        return dp;
+    }
+
+    private Seller instantiateSeller(ResultSet rs, Department dp) throws SQLException{
+        Seller sl = new Seller();   
+        sl.setId(rs.getInt("Id"));
+        sl.setName(rs.getString("Name"));
+        sl.setEmail(rs.getString("Email"));
+        sl.setBirthDate(rs.getDate("BirthDate"));
+        sl.setBaseSalary(rs.getDouble("BaseSalary"));
+        sl.setDepartment(dp); //Acessando o objeto dp
+
+        return sl;
     }
     
 }
