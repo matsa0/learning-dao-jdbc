@@ -4,7 +4,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import db.Db;
 import db.DbException;
@@ -55,7 +58,7 @@ public class SellerDaoJDBC implements SellerDao{
                 Department dp = instantiateDepartment(rs); //instanciando o objeto dp
 
                 Seller sl1 = instantiateSeller(rs, dp); //instanciando o objeto sl1
-
+                return sl1;
             }
             return null;
         } 
@@ -73,6 +76,50 @@ public class SellerDaoJDBC implements SellerDao{
         throw new UnsupportedOperationException("Unimplemented method 'findAll'");
     }
 
+    @Override
+    public List<Seller> findByDepartment(Department dp) {
+        PreparedStatement st = null;
+        ResultSet rs = null;
+
+        try {
+            st = conn.prepareStatement(
+                "SELECT seller.*, department.Name as DepName " +
+                "FROM seller INNER JOIN department " +
+                "ON seller.DepartmentId = department.Id " +
+                "WHERE DepartmentId = ? " +
+                "ORDER BY Name"
+            );
+
+            st.setInt(1, dp.getId()); //interrogação (1) e o valor que será passado
+            rs = st.executeQuery(); //executa comando sql e armazena o resultado no ResultSet em formato de tabela
+
+            List<Seller> sellerList =  new ArrayList<>(); //criando uma lista de vendedores
+            Map<Integer, Department> map = new HashMap<>();
+
+            while(rs.next()) { //enquanto existir um próximo resultado
+                //Não posso instanciar um mesmo departamento várias vezes, então eu verifico se o departamento já existe no map
+                Department dep = map.get(rs.getInt("DepartmentId")); //buscando o departamento no map pelo ID
+
+                if(dep == null) {
+                    dep = instantiateDepartment(rs);
+                    map.put(rs.getInt("DepartmentId"), dep); //adicionando o departamento no map
+                }
+
+                Seller sl = instantiateSeller(rs, dep);
+                sellerList.add(sl); //adicionando o vendedor na lista
+            }
+            return sellerList;
+        }
+        catch(SQLException e) {
+            throw new DbException(e.getMessage());
+        }
+        finally {
+            Db.closeStatment(st);
+            Db.closeResultSet(rs);
+        }
+    }
+
+    //Métodos auxiliares
     private Department instantiateDepartment(ResultSet rs) throws SQLException{ //vai capturar a exceção e lançar para a camada de cima
         Department dp = new Department();
         dp.setId(rs.getInt("DepartmentId"));

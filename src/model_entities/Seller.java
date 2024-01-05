@@ -1,7 +1,5 @@
 package model_entities;
 import java.io.Serializable;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Date;
 import java.util.Objects;
 
