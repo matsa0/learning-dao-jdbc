@@ -14,8 +14,14 @@ public class App {
         Seller sl1 = sellerDao.findById(3);
         System.out.println(sl1);
         
-        System.out.println("\n=== TEST 2: seller findByDepartment ===");
+        System.out.println("\n\n=== TEST 2: seller findByDepartment ===");
         List<Seller> sellerList = sellerDao.findByDepartment(new Department(2, null));
+        for(Seller sl : sellerList) {
+            System.out.println(sl + "\n");
+        }
+
+        System.out.println("\n\n=== TEST 3: seller findAll ===");
+        sellerList = sellerDao.findAll();
         for(Seller sl : sellerList) {
             System.out.println(sl + "\n");
         }

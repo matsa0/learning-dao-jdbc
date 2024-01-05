@@ -73,7 +73,40 @@ public class SellerDaoJDBC implements SellerDao{
 
     @Override
     public List<Seller> findAll() {
-        throw new UnsupportedOperationException("Unimplemented method 'findAll'");
+        PreparedStatement st = null;
+        ResultSet rs = null;
+
+        try {
+            st = conn.prepareStatement(
+                "SELECT seller.*, department.Name as DepName " +
+                "FROM seller INNER JOIN department " +
+                "ON seller.DepartmentId = department.Id " +
+                "ORDER BY Name"
+            );
+
+            rs = st.executeQuery();
+            List<Seller> allSellerList = new ArrayList<>();
+            Map<Integer, Department> map = new HashMap<>();
+
+            while(rs.next()) {
+                Department dep = map.get(rs.getInt("DepartmentId")); //buscando o departamento no map pelo ID
+
+                if(dep == null){
+                    dep = instantiateDepartment(rs);
+                    map.put(rs.getInt("DepartmentId"), dep); //adicionando o departamento no map
+                }
+                Seller sl = instantiateSeller(rs, dep);
+                allSellerList.add(sl);
+            }
+            return allSellerList;
+        }
+        catch(SQLException e) {
+            throw new DbException(e.getMessage());
+        }
+        finally {
+            Db.closeStatment(st);
+            Db.closeResultSet(rs);
+        }
     }
 
     @Override
@@ -90,8 +123,8 @@ public class SellerDaoJDBC implements SellerDao{
                 "ORDER BY Name"
             );
 
-            st.setInt(1, dp.getId()); //interrogação (1) e o valor que será passado
-            rs = st.executeQuery(); //executa comando sql e armazena o resultado no ResultSet em formato de tabela
+            st.setInt(1, dp.getId()); 
+            rs = st.executeQuery(); 
 
             List<Seller> sellerList =  new ArrayList<>(); //criando uma lista de vendedores
             Map<Integer, Department> map = new HashMap<>();
@@ -106,7 +139,7 @@ public class SellerDaoJDBC implements SellerDao{
                 }
 
                 Seller sl = instantiateSeller(rs, dep);
-                sellerList.add(sl); //adicionando o vendedor na lista
+                sellerList.add(sl); //adicionando o vendedor na lista de vendedores
             }
             return sellerList;
         }
