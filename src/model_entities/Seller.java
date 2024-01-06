@@ -16,6 +16,14 @@ public class Seller implements Serializable{
 
     public Seller() {}
 
+    public Seller(String name, String email, Date birthDate, double baseSalary, Department department) {
+        this.name = name;
+        this.email = email;
+        this.birthDate = birthDate;
+        this.baseSalary = baseSalary;
+        this.department = department;
+    }
+
     public Seller(int id, String name, String email, Date birthDate, double baseSalary, Department department) {
         this.id = id;
         this.name = name;
@@ -24,6 +32,7 @@ public class Seller implements Serializable{
         this.baseSalary = baseSalary;
         this.department = department;
     }   
+    
 
     //Getters and Setters
     public int getId() {
@@ -81,13 +90,13 @@ public class Seller implements Serializable{
         }
     
 
-        return "***Seller***" +
-        "\nId > " + this.id +
-        "\nName > " + this.name +
-        "\nEmail > " + this.email +
-        "\nBirthDate > " + this.birthDate +
-        "\nBaseSalary > " + this.baseSalary +
-        "\n" + departmentInfos; 
+        return 
+        "\nSeller: Id > " + this.id +
+        ", Name > " + this.name +
+        ", Email > " + this.email +
+        ", BirthDate > " + this.birthDate +
+        ", BaseSalary > " + this.baseSalary +
+        "" + departmentInfos; 
     }
 
     //Equals and HashCode

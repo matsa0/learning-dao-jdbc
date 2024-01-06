@@ -1,9 +1,11 @@
 package model_dao_impl;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,8 +26,46 @@ public class SellerDaoJDBC implements SellerDao{
     }
 
     @Override
-    public void insert(Seller obj) {
-        throw new UnsupportedOperationException("Unimplemented method 'insert'");
+    public void insert(Seller sl) {
+        PreparedStatement st = null;
+
+        try {
+            st = conn.prepareStatement(
+                "INSERT INTO SELLER " +
+                "(Name, Email, BirthDate, BaseSalary, DepartmentId) " +
+                "VALUES (?, ?, ?, ?, ?)",
+                Statement.RETURN_GENERATED_KEYS /*Usando para inserções no banco de dados.
+                Permite recuperar as chaves geradas automaticamente de uma coluna(auto_increment) após a execução de uma instrução SQL que 
+                insere novos registros em uma tabela */
+            );
+            st.setString(1, sl.getName());
+            st.setString(2, sl.getEmail());
+            st.setDate(3, new Date(sl.getBirthDate().getTime()));
+            st.setDouble(4, sl.getBaseSalary());
+            st.setInt(5, sl.getDepartment().getId()); //pega o Id de dedpartment através do  etDepartment() de Seller
+
+            /*executeUpdate(): É usado para executar instruções SQL que realizam ações de modificação nos dados no banco de dados, 
+            como INSERT, UPDATE ou DELETE.*/
+            int rowsAffected = st.executeUpdate(); 
+
+            if(rowsAffected > 0) {
+                ResultSet rs = st.getGeneratedKeys(); // Obtém um ResultSet contendo as chaves geradas após a operação de inserção bem-sucedida.
+                if(rs.next()) { //verifica se ainda possui chaves
+                    int id = rs.getInt(1); //coluna das chaves
+                    sl.setId(id); //define o id gerado pelo setGeneratedKeys() para o novo Seller
+                }
+                Db.closeResultSet(rs);
+            }
+            else {
+                throw new DbException("ERRO! Nenhuma linha afetada");
+            }
+        }
+        catch(SQLException e) {
+            throw new DbException(e.getMessage());
+        }
+        finally {
+            Db.closeStatment(st);
+        }
     }
 
     @Override

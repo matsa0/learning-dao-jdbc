@@ -10,6 +10,10 @@ public class Department implements Serializable{
 
     public Department() {}
 
+    public Department(int id) {
+        this.id = id;
+    }
+
     public Department(int id, String name) {
         this.id = id;
         this.name = name;
@@ -34,9 +38,9 @@ public class Department implements Serializable{
     //toString
     @Override
     public String toString() {
-        return "***Department***" + 
-        "\nId > " + this.id + 
-        "\nName > "  + this.name;
+        return 
+        " | Department: Id > " + this.id + 
+        ", Name > "  + this.name;
     }
 
     //Equals and HashCode
