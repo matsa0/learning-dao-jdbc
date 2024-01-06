@@ -31,5 +31,13 @@ public class App {
         Seller sl2 = new Seller("Carl Jhonson", "carljhonson@email.com", new Date(), 5642.56, new Department(3));
         sellerDao.insert(sl2);
         System.out.println(sl2);
+    
+        System.out.println("\n\n=== TEST 5: seller update ===");
+        sl1 = sellerDao.findById(8); //Carreguei os dados do vendedor de id 8 em sl1
+        sl1.setName("Melo Lima");
+        sl1.setEmail("melo@hotmail.com");
+        sl1.setBirthDate(new Date());
+        sl1.setBaseSalary(5461.41);
+        sellerDao.update(sl1);
     }
 }
