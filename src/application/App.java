@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import model_dao.DaoFactory;
-import model_dao.DepartmentDao;
+
 import model_dao.SellerDao;
 import model_entities.Department;
 import model_entities.Seller;
@@ -31,11 +31,13 @@ public class App {
             System.out.println(sl);
         }
         
+        /* Comentado mas funcionando
         System.out.println("\n\n=== TEST 4: seller insert ===");
         Seller sl2 = new Seller("Carl Jhonson", "carljhonson@email.com", new Date(), 5642.56, new Department(3));
         sellerDao.insert(sl2);
         System.out.println(sl2);
-    
+        */
+
         System.out.println("\n\n=== TEST 5: seller update ===");
         sl1 = sellerDao.findById(8); //Carreguei os dados do vendedor de id 8 em sl1
         sl1.setName("Melo Lima");

@@ -5,9 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
-
-import com.mysql.cj.x.protobuf.MysqlxPrepare.Prepare;
 
 import db.Db;
 import db.DbException;
@@ -78,8 +77,29 @@ public class DepartmentDaoJDBC implements DepartmentDao {
 
     @Override
     public void deleteById(Integer id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'deleteById'");
+        PreparedStatement st = null;
+
+        try {
+            st = conn.prepareStatement(
+                "DELETE FROM department " +
+                "WHERE Id = ? "
+            );
+
+            st.setInt(1, id);
+
+            int rowsAffected = st.executeUpdate();
+            if(rowsAffected == 0) {
+                throw new DbException("ERRO! Nenhuma linha alterada!");
+            }
+
+            System.out.println("DELETE completed! Rows Affected > " + rowsAffected);
+        }
+        catch(SQLException e) {
+            throw new DbException(e.getMessage());
+        }
+        finally {
+            Db.closeStatment(st);
+        }
     }
 
     @Override
@@ -110,8 +130,31 @@ public class DepartmentDaoJDBC implements DepartmentDao {
 
     @Override
     public List<Department> findAll() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findAll'");
+        PreparedStatement st = null;
+        ResultSet rs = null;
+
+        try {
+            st = conn.prepareStatement(
+                "SELECT department.* " +
+                "FROM department"
+            );
+
+            rs = st.executeQuery();
+            List<Department> allDepartments = new ArrayList<>();
+
+            while(rs.next()) {
+                Department dep = instantiateDepartment(rs);
+                allDepartments.add(dep);
+            }
+            return allDepartments;
+        }
+        catch(SQLException e) {
+            throw new DbException(e.getMessage());
+        }
+        finally {
+            Db.closeStatment(st);
+            Db.closeResultSet(rs);
+        }
     }
     
     //Método auxilair
